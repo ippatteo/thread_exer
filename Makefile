@@ -4,10 +4,9 @@ CC := gcc
 
 CFLAGS := -Wall -Wextra -Werror -g
 
-SOURCE := Philo/*.c
+SOURCE := philosophers/*.c
 
 all:
-	make -C $(LIBFT)
 	$(CC) $(CFLAGS) $(SOURCE) -o $(NAME)
 
 clean: fclean

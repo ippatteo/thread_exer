@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   Philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/01/30 17:52:25 by mcamilli         ###   ########.fr       */
+/*   Created: 2024/01/30 15:04:14 by mcamilli          #+#    #+#             */
+/*   Updated: 2024/02/05 15:49:55 by matteocamil      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void	init(t_var *var, int ac, char **av)
+int	main(int ac, char **av)
 {
-	var->np = ft_atoi(av[1]);
-	var->td = ft_atoi(av[2]);
-	var->te = ft_atoi(av[3]);
-	var->ts = ft_atoi(av[4]);
-	if (ac == 6)
-		var->ts = ft_atoi(av[5]);
+	t_data	data;
+	t_philo *philo;
+
+	if (ac >= 5 && ac <= 6)
+	{
+		init(&data, ac, av);
+		if (error(&data))
+			return (0);
+		alloc(&data);
+		init_philos(&data);
+		init_forks(&data);
+	}
+	else
+	{
+		write(2, "Error\n", 6);
+		return (0);
+	}
+		
 }
