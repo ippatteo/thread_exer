@@ -6,7 +6,7 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/06 18:42:19 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/06 18:42:44 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void *ft_routine(void *ptr)
 	{
 		pthread_create(&delorian, NULL, &timer, &philo);
 		ft_eat(philo, delorian);
-		sms(philo->data, "is thinking", philo->id_philo);
+		sms(philo->data, "is thinking", philo->id_philo); 
 	}
 	return (NULL);
 }

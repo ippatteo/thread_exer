@@ -6,7 +6,7 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 17:40:26 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/06 17:40:32 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/06 18:46:00 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,12 @@ void *atac(void *ptr)
 		{
 			if(data->philo[i].sated == 1)
 				all_sated++;
-			if(all_sated == data->n_philo)
+			if(all_sated == data->n_philo || data->philo->dead == 1)
 			{
 				ft_kill_all(data);
 				return (NULL);
 			}
+			i++;
 		}
 	}
 }
