@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
+/*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:04:14 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/05 17:38:52 by matteocamil      ###   ########.fr       */
+/*   Updated: 2024/02/06 13:35:34 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 int	main(int ac, char **av)
 {
 	t_data	data;
-	t_philo *philo;
+	int i;
 
+	i = 0;
 	if (ac >= 5 && ac <= 6)
 	{
 		init(&data, ac, av);
@@ -25,7 +26,12 @@ int	main(int ac, char **av)
 		alloc(&data);
 		init_philos(&data);
 		init_fork(&data);
-		init_thread(&data);
+		init_threads(&data);
+		while(i < data.n_philo)
+		{
+			pthread_join(data.threads[i], NULL);
+			i++;
+		}
 	}
 	else
 	{

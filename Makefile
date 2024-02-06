@@ -9,10 +9,9 @@ SOURCE := philosophers/*.c
 all:
 	$(CC) $(CFLAGS) $(SOURCE) -o $(NAME)
 
-clean: fclean
+clean: 
+	rm -rf $(NAME)
 
 fclean: clean
-		make clean -C $(LIBFT)
-		rm -rf $(NAME)
 
 re: fclean all

@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
+/*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/05 17:49:42 by matteocamil      ###   ########.fr       */
+/*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
+/*   Updated: 2024/02/06 13:44:26 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-int	ft_usleep(useconds_t time)
+
+int ft_usleep(uint64_t time)
 {
-	u_int64_t	start;
+	uint64_t start;
 
 	start = get_time();
 	while ((get_time() - start) < time)
@@ -21,42 +22,44 @@ int	ft_usleep(useconds_t time)
 	return (0);
 }
 
-
 void ft_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->fork_l);
-	pthread_mutex_lock(&philo->fork_r);
-	
+	printf("philo n %d ha preso la forchetta\n", philo->id_philo);
+	if (pthread_mutex_lock(philo->fork_l) == 0)
+		pthread_mutex_lock(philo->fork_r);
+	// ricordare di unlockare
+	printf("philo n %d sta mangiando\n", philo->id_philo);
 	ft_usleep(philo->t_eat);
-	pthread_mutex_unlock(&philo->fork_l);
-	pthread_mutex_unlock(&philo->fork_r);
-	
+	 philo->meal++
+	 if(philo->meal = philo->data->n_eat && philo->data->n_eat > 0)
+		philo->sated = 1;
+	pthread_mutex_unlock(philo->fork_l);
+	pthread_mutex_unlock(philo->fork_r);
+	printf("philo n %d sta dormendo\n", philo->id_philo);
 	ft_usleep(philo->t_sleep);
 }
 
 void ft_thinking(t_philo *philo)
 {
-	printf("philo n %d sta pensando", philo->id_philo);
+	printf("philo n %d sta pensando\n", philo->id_philo);
 }
-void ft_routine(void *ptr)
+void *ft_routine(void *ptr)
 {
 	t_philo *philo;
-	int i;
-	
-	i = 1;
+
 	philo = (t_philo *)ptr;
-	 while(1)
-	 {
+	while (1)
+	{
+		//printf("sono il filo %d\n", philo->id_philo);
 		ft_eat(philo);
 		ft_thinking(philo);
-	 }
-	
+	}
 }
-int	ft_atoi(char *str)
+int ft_atoi(char *str)
 {
-	long int	r;
-	int			s;
-	int			i;
+	long int r;
+	int s;
+	int i;
 
 	r = 0;
 	s = 1;
@@ -66,15 +69,15 @@ int	ft_atoi(char *str)
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
-			return(-1);	
+			return (-1);
 		r = r * 10 + str[i++] - '0';
 	}
 	if (r > 2147483647 || r < -2147483647)
-		return(-1);
+		return (-1);
 	return (r * s);
 }
 
-int	error(t_data *data)
+int error(t_data *data)
 {
 	if (data->n_philo < 0 || data->t_die < 0 || data->t_eat < 0 || data->t_sleep < 0 || data->n_eat < 0)
 	{
@@ -85,7 +88,7 @@ int	error(t_data *data)
 		return (0);
 }
 
-int	ft_isdigit(int c)
+int ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
 		return (1);
@@ -93,14 +96,17 @@ int	ft_isdigit(int c)
 		return (0);
 }
 
-
 void alloc(t_data *data)
 {
-	int	i;
-	
-	i = 0;
 	data->philo = malloc(sizeof(t_philo) * data->n_philo);
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->n_philo);
 	data->threads = malloc(sizeof(pthread_t) * data->n_philo);
 }
 
+uint64_t get_time(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000));
+}
