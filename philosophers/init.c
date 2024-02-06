@@ -6,7 +6,7 @@
 /*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/05 16:13:07 by matteocamil      ###   ########.fr       */
+/*   Updated: 2024/02/05 17:45:33 by matteocamil      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void init_philos(t_data *data)
 	i = 0;
 	while (i < data->n_philo)
 	{
+		data->philo->id_philo = i + 1;
 		data->philo->t_die = data->t_die;
 		data->philo->t_eat = data->t_eat;
 		data->philo->t_sleep = data->t_sleep;

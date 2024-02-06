@@ -6,7 +6,7 @@
 /*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 17:06:42 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/05 15:52:07 by matteocamil      ###   ########.fr       */
+/*   Updated: 2024/02/05 17:46:57 by matteocamil      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 typedef struct s_philo
 {
-	int	n_philo;	//numero filosofi
+	int	id_philo;	//numero filosofi
 	int	t_die;	//time to die
 	int	t_eat;	//time to eat
 	int	t_sleep;	//time to sleep

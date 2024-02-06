@@ -6,7 +6,7 @@
 /*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/05 16:53:58 by matteocamil      ###   ########.fr       */
+/*   Updated: 2024/02/05 17:49:42 by matteocamil      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,24 @@ int	ft_usleep(useconds_t time)
 		usleep(time / 10);
 	return (0);
 }
+
+
+void ft_eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->fork_l);
+	pthread_mutex_lock(&philo->fork_r);
+	
+	ft_usleep(philo->t_eat);
+	pthread_mutex_unlock(&philo->fork_l);
+	pthread_mutex_unlock(&philo->fork_r);
+	
+	ft_usleep(philo->t_sleep);
+}
+
+void ft_thinking(t_philo *philo)
+{
+	printf("philo n %d sta pensando", philo->id_philo);
+}
 void ft_routine(void *ptr)
 {
 	t_philo *philo;
@@ -29,9 +47,8 @@ void ft_routine(void *ptr)
 	philo = (t_philo *)ptr;
 	 while(1)
 	 {
-		pthread_mutex_lock(&philo->fork_l);
-		pthread_mutex_lock(&philo->fork_r);
-		
+		ft_eat(philo);
+		ft_thinking(philo);
 	 }
 	
 }

@@ -6,7 +6,7 @@
 /*   By: matteocamilli <matteocamilli@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:04:14 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/05 15:49:55 by matteocamil      ###   ########.fr       */
+/*   Updated: 2024/02/05 17:38:52 by matteocamil      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	main(int ac, char **av)
 			return (0);
 		alloc(&data);
 		init_philos(&data);
-		init_forks(&data);
+		init_fork(&data);
+		init_thread(&data);
 	}
 	else
 	{
