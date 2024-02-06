@@ -6,11 +6,12 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/06 14:35:21 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/06 17:27:46 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
 
 void	init(t_data *data, int ac, char **av)
 {
@@ -18,6 +19,8 @@ void	init(t_data *data, int ac, char **av)
 	data->t_die = ft_atoi(av[2]);
 	data->t_eat = ft_atoi(av[3]);
 	data->t_sleep = ft_atoi(av[4]);
+	data->time = get_time();
+	data->sms_flag = 0;
 	if (ac == 6)
 		data->n_eat = ft_atoi(av[5]);
 	else
@@ -39,6 +42,7 @@ void init_philos(t_data *data)
 		data->philo[i].meal = 0;
 		data->philo[i].sated = 0;
 		data->philo[i].dead = 0;
+		data->philo[i].flag = 0;
 		data->philo[i].data = data;
 		
 		i++;
