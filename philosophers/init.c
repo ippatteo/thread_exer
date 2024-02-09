@@ -6,7 +6,7 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/06 17:27:46 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/09 03:47:33 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void init_philos(t_data *data)
 		data->philo[i].meal = 0;
 		data->philo[i].sated = 0;
 		data->philo[i].dead = 0;
-		data->philo[i].flag = 0;
+		data->philo[i].end_philo = 0;
 		data->philo[i].data = data;
 		
 		i++;
@@ -69,13 +69,23 @@ void init_fork(t_data *data)
 
 void init_threads(t_data *data)
 {
+	pthread_t pula;
 	int i;
-
+	
+	data->end = 0;
 	i = 0;
+	pthread_mutex_init(&data->lock, NULL);
+	pthread_create(&pula, NULL, &atac, &data);
 	while (i < data->n_philo)
 	{
 		pthread_create(&data->threads[i], NULL, &ft_routine, &data->philo[i]);
 		i++;
 		usleep(1000);//qui ritardi i filosofi
 	}
+	while(i < data->n_philo)
+	{
+		pthread_join(data->threads[i], NULL);
+		i++;
+	}
+	pthread_join(pula, NULL);
 }

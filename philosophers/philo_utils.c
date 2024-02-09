@@ -6,7 +6,7 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/06 18:42:44 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/09 05:02:00 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,17 @@
 
 void	*timer(void *ptr)
 {
-	u_int64_t	start;
 	t_philo		*philo;
 	
 	philo = (t_philo *)ptr;
-	while(philo->flag == 0)
+	while(philo->end_philo == 0 && philo->data->end == 0)
 	{
-		ft_usleep(10);
-		start += 10;
-		if (start > (u_int64_t)philo->data->t_die)
+		if (get_time() - philo->data->time > (u_int64_t)philo->data->t_die)
 			{
+				pthread_mutex_lock(&philo->lock_dead);
 				philo->dead = 1;
-				philo->flag = 1;
-				philo->data->sms_flag = 1;
+				philo->end_philo = 1;
+				pthread_mutex_lock(&philo->lock_dead);
 			}
 	}
 	return(NULL);
@@ -44,46 +42,76 @@ int	ft_usleep(uint64_t time)
 
 void ft_eat(t_philo *philo, pthread_t delorian)
 {
-	
 	if (pthread_mutex_lock(philo->fork_l) == 0)
 	{
 		sms(philo->data, "has taken a fork", philo->id_philo);
 		pthread_mutex_lock(philo->fork_r);
+		sms(philo->data, "has taken a fork", philo->id_philo);
+		
 	}
 	pthread_join(delorian, NULL);
-	// ricordare di unlockare
 	sms(philo->data, "is eating", philo->id_philo);
 	ft_usleep(philo->t_eat);
 	pthread_create(&delorian, NULL, &timer, &philo);
 	 philo->meal++;
-	 if(philo->meal == philo->data->n_eat && philo->data->n_eat > 0)
-			philo->sated = 1;
 	pthread_mutex_unlock(philo->fork_l);
 	pthread_mutex_unlock(philo->fork_r);
-	if (philo->dead == 1)
-		return ;
-	sms(philo->data, "sta dormendo", philo->id_philo);
+}
+void ft_sleeping(t_philo *philo)
+{
+		
 	if (philo->t_sleep >= philo->t_die)
 	{
-		ft_usleep(philo->t_die - philo->t_sleep);
+		sms(philo->data, "is sleeping", philo->id_philo);
+		usleep(philo->t_die - philo->t_sleep);
+		pthread_mutex_lock(&philo->lock_dead);
 		philo->dead = 1;
+		philo->end_philo = 1;
+		pthread_mutex_lock(&philo->lock_dead);
+		printf(" pi;polo\n");
 	}
 	else
+	{
+		sms(philo->data, "is sleeping", philo->id_philo);
 		ft_usleep(philo->t_sleep);
+	}
+	
 }
 
+int is_it_sated(t_philo *philo)
+{
+	 if(philo->meal == philo->data->n_eat && philo->data->n_eat > 0)
+		 {
+			pthread_mutex_lock(&philo->lock_dead);
+			philo->sated = 1;
+			philo->end_philo = 1;
+			pthread_mutex_unlock(&philo->lock_dead);
+			return (1) ;
+		 }
+	else
+		return (0);
+}
 void *ft_routine(void *ptr)
 {
 	t_philo *philo;
 	pthread_t delorian;
 
 	philo = (t_philo *)ptr;
-	while (philo->dead == 0)
+	pthread_mutex_init(&philo->lock_dead, NULL);
+	while (philo->dead == 0 && philo->data->end == 0)
 	{
 		pthread_create(&delorian, NULL, &timer, &philo);
 		ft_eat(philo, delorian);
-		sms(philo->data, "is thinking", philo->id_philo); 
+		 if(is_it_sated(philo))
+			break ;
+		if (philo->end_philo == 1 || philo->data->end == 1)
+			break ;
+		ft_sleeping(philo);
+		if (philo->end_philo == 0 && philo->data->end == 0)
+			sms(philo->data, "is thinking", philo->id_philo); 
 	}
+	pthread_join(delorian, NULL);
+	pthread_mutex_destroy(&philo->lock_dead);
 	return (NULL);
 }
 int ft_atoi(char *str)
@@ -146,4 +174,33 @@ void sms(t_data *data, char *str, int id)
 {
 	if(data->sms_flag == 0)
 		printf("%ld philo n%d %s\n", (get_time() - data->time), id, str);
+}
+
+void free_all(t_data *data)
+{	int i;
+	
+	i = 0;
+	while (i < data->n_philo)
+	{
+		pthread_mutex_destroy(data->philo[i].fork_l);
+		pthread_mutex_destroy(data->philo[i].fork_r);
+		pthread_mutex_destroy(&data->forks[i]);
+		i++;
+	}
+	free(data->philo);
+	free(data->forks);
+	free(data->threads);
+}
+
+void math_sated(t_data *data)
+{
+	int i;
+	
+	i = 0;
+	data->sated_condition = 0;
+	while (i < data->n_philo)
+	{
+		data->sated_condition += data->philo[i].id_philo;
+		i++;
+	}
 }
