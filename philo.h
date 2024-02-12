@@ -6,7 +6,7 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 17:06:42 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/09 04:18:41 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/12 09:29:36 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ typedef struct s_philo
 	int	t_sleep;	//time to sleep
 	int	n_eat;
 	int	end_philo;
+	uint64_t time_to_die;
 	pthread_mutex_t *fork_l; //how meny time they have to eat
 	pthread_mutex_t *fork_r;
 	struct s_data *data;
 	pthread_mutex_t	lock_dead;
-	
+	int	is_eating;
 }	t_philo;
 
 typedef struct s_data
@@ -58,6 +59,7 @@ typedef struct s_data
 	pthread_mutex_t *forks;
 	pthread_t *threads;
 	pthread_mutex_t lock;
+	pthread_mutex_t print;
 	uint64_t	time;
 }	t_data;
 
@@ -71,7 +73,7 @@ void		init(t_data *data, int ac, char **av);
 void 		init_philos(t_data *data);
 void 		init_fork(t_data *data);
 void 		init_threads(t_data *data);
-void		ft_eat(t_philo *philo, pthread_t delorian);
+void		ft_eat(t_philo *philo);
 void 		ft_thinking(t_philo *philo);
 void 		*ft_routine(void *ptr);
 void		alloc(t_data *data);

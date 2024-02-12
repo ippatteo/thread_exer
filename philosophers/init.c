@@ -6,7 +6,7 @@
 /*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/09 08:52:13 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/12 10:54:48 by kevi il re,      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	init(t_data *data, int ac, char **av)
 	data->t_eat = ft_atoi(av[3]);
 	data->t_sleep = ft_atoi(av[4]);
 	data->time = get_time();
+	pthread_mutex_init(&data->print, NULL);
 	data->sms_flag = 0;
 	if (ac == 6)
 		data->n_eat = ft_atoi(av[5]);
@@ -43,8 +44,10 @@ void init_philos(t_data *data)
 		data->philo[i].sated = 0;
 		data->philo[i].dead = 0;
 		data->philo[i].end_philo = 0;
+		data->philo[i].is_eating = 0;
+		data->philo[i].time_to_die = get_time() + data->t_die;
 		data->philo[i].data = data;
-		
+		pthread_mutex_init(&data->philo[i].lock_dead, NULL);
 		i++;
 	}
 }
@@ -54,8 +57,11 @@ void init_fork(t_data *data)
 	int	i;
 	
 	i = 0;
-	while(i++ < data->n_philo)
+	while(i < data->n_philo)
+	{
 		pthread_mutex_init(&data->forks[i], NULL);
+		i++;
+	}
 	data->philo[0].fork_l = &data->forks[0];
 	data->philo[0].fork_r = &data->forks[data->n_philo - 1];
 	i = 1;
@@ -71,17 +77,18 @@ void init_threads(t_data *data)
 {
 	pthread_t pula;
 	int i;
-	
+	data->sated_condition = 0;
 	data->end = 0;
 	i = 0;
 	pthread_mutex_init(&data->lock, NULL);
-	pthread_create(&pula, NULL, &atac, &data);
+	pthread_create(&pula, NULL, &atac, data);
 	while (i < data->n_philo)
 	{
 		pthread_create(&data->threads[i], NULL, &ft_routine, &data->philo[i]);
 		i++;
 		usleep(1000);//qui ritardi i filosofi
 	}
+	i = 0;
 	while(i < data->n_philo)
 	{
 		pthread_join(data->threads[i], NULL);
