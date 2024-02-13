@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/13 18:11:10 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:53:30 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,18 +180,19 @@ void sms(t_data *data, char *str, int id)
 	printf("end = %d  id = %d\n", data->end, id);
 	if(data->end == 1)
 		return ;
-	printf("%li philo n%d %s, end = %d\n", (get_time() - data->time), id, str, data->end);
-
+	printf("%llu philo n%d %s, end = %d\n", (get_time() - data->time), id, str, data->end);
 }
 
-void free_all(t_data *data)
-{	int i;
+void	free_all(t_data *data)
+{
+	int	i;
 
 	i = 0;
 	while (i < data->n_philo)
 	{
 		pthread_mutex_destroy(data->philo[i].fork_l);
-		pthread_mutex_destroy(data->philo[i].fork_r);
+		if (data->n_philo > 1)
+			pthread_mutex_destroy(data->philo[i].fork_r);
 		pthread_mutex_destroy(&data->forks[i]);
 		pthread_mutex_destroy(&data->philo[i].lock_dead);
 		i++;
