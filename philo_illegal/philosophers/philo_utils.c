@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/13 14:10:02 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 14:38:34 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ uint64_t get_time(void)
 
 void sms(t_data *data, char *str, int id)
 {
+	printf("end = %d  id = %d\n", data->end, id);
 	if(data->end == 1)
 		return ;
 	printf("%llu philo n%d %s, end = %d\n", (get_time() - data->time), id, str, data->end);
