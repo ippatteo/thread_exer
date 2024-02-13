@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/13 14:38:34 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:11:10 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	*timer(void *ptr)
 	philo = (t_philo *)ptr;
 	while(philo->data->end == 0)
 	{
-
 		if (get_time() >= philo->time_to_die && !philo->is_eating)
 		{
 			pthread_mutex_lock(&philo->data->lock);
@@ -27,7 +26,6 @@ void	*timer(void *ptr)
 			philo->data->end = 1;
 			pthread_mutex_unlock(&philo->data->print);
 			pthread_mutex_unlock(&philo->data->lock);
-
 			return(NULL);
 		}
 
@@ -51,6 +49,13 @@ void ft_eat(t_philo *philo) //void ft_eat(t_philo *philo, pthread_t delorian)
 	pthread_mutex_lock(&philo->data->print);
 	sms(philo->data, "has taken a fork", philo->id_philo);
 	pthread_mutex_unlock(&philo->data->print);
+	if (philo->doomed)
+	{
+		printf(" ok\n");
+		pthread_mutex_unlock(philo->fork_l);
+		ft_usleep(philo->data->t_die);
+		return ;
+	}
 	pthread_mutex_lock(philo->fork_r);
 	pthread_mutex_lock(&philo->data->print);
 	sms(philo->data, "has taken a fork", philo->id_philo);
@@ -175,7 +180,7 @@ void sms(t_data *data, char *str, int id)
 	printf("end = %d  id = %d\n", data->end, id);
 	if(data->end == 1)
 		return ;
-	printf("%llu philo n%d %s, end = %d\n", (get_time() - data->time), id, str, data->end);
+	printf("%li philo n%d %s, end = %d\n", (get_time() - data->time), id, str, data->end);
 
 }
 

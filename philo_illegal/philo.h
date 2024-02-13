@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 17:06:42 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/13 12:01:50 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:08:09 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_philo
 	int	t_sleep;	//time to sleep
 	int	n_eat;
 	int	end_philo;
+	int doomed;
 	uint64_t time_to_die;
 	pthread_mutex_t *fork_l; //how meny time they have to eat
 	pthread_mutex_t *fork_r;

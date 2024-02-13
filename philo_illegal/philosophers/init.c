@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/13 14:40:25 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 18:09:20 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	init_philos(t_data *data)
 		data->philo[i].meal = 0;
 		data->philo[i].sated = 0;
 		data->philo[i].dead = 0;
+		data->philo[i].doomed = 0;
 		data->philo[i].end_philo = 0;
 		data->philo[i].is_eating = 0;
 		data->philo[i].time_to_die = get_time() + data->t_die;
@@ -62,7 +63,10 @@ void	init_fork(t_data *data)
 		i++;
 	}
 	data->philo[0].fork_l = &data->forks[0];
-	data->philo[0].fork_r = &data->forks[data->n_philo - 1];
+	if (data->n_philo - 1)
+		data->philo[0].fork_r = &data->forks[data->n_philo - 1];
+	else
+		data->philo[0].doomed = 1;
 	i = 1;
 	if (data->n_philo > 1)
 	{
