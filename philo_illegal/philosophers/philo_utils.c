@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/13 18:53:30 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 20:03:21 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ void *ft_routine(void *ptr)
 	philo = (t_philo *)ptr;
 	if (pthread_create(&delorian, NULL, &timer, (void *)philo))
 		return (NULL);
+	if (philo->id_philo % 2 == 0)
+		ft_usleep(100);
 	while (philo->data->end == 0)
 	{
 		ft_eat(philo);
@@ -112,7 +114,7 @@ void *ft_routine(void *ptr)
 		ft_sleeping(philo);
 		if (philo->data->end == 1)
 			break ;
-		pthread_mutex_unlock(&philo->data->print);
+		pthread_mutex_lock(&philo->data->print);
 		sms(philo->data, "is thinking", philo->id_philo);
 		pthread_mutex_unlock(&philo->data->print);
 	}
@@ -177,10 +179,10 @@ uint64_t get_time(void)
 
 void sms(t_data *data, char *str, int id)
 {
-	printf("end = %d  id = %d\n", data->end, id);
+	//printf("end = %d  id = %d\n", data->end, id);
 	if(data->end == 1)
 		return ;
-	printf("%llu philo n%d %s, end = %d\n", (get_time() - data->time), id, str, data->end);
+	printf("%llu %d %s\n", (get_time() - data->time), id, str);
 }
 
 void	free_all(t_data *data)

@@ -6,7 +6,7 @@
 /*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/13 18:09:20 by mcamilli         ###   ########.fr       */
+/*   Updated: 2024/02/13 19:53:34 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	init_threads(t_data *data)
 	{
 		pthread_create(&data->threads[i], NULL, &ft_routine, &data->philo[i]);
 		i++;
-		usleep(1000);
+		//ft_usleep(100);
 	}
 	i = 0;
 	while (i < data->n_philo)
