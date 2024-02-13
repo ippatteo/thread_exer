@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
+/*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/06 12:12:00 by kevi il re,       #+#    #+#             */
-/*   Updated: 2024/02/12 10:05:07 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/13 09:06:53 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*timer(void *ptr)
 {
 	t_philo		*philo;
 	philo = (t_philo *)ptr;
-	while(philo->data->end == 0)
+	while(philo->dead == 0 && philo->data->end == 0)
 	{
 		
 	//	printf(" il tempo è %d \n", (int)(get_time() - philo->data->time));
@@ -24,12 +24,11 @@ void	*timer(void *ptr)
 		{
 			pthread_mutex_lock(&philo->lock_dead);
 			pthread_mutex_lock(&philo->data->lock);
-			pthread_mutex_lock(&philo->data->print);
-			sms(philo->data, "is dead", philo->id_philo);
-			philo->data->end = 1;
-			//ft_usleep(9000);
+			philo->dead = 1;
 			pthread_mutex_unlock(&philo->data->lock);
-			pthread_mutex_unlock(&philo->data->print);
+			pthread_mutex_lock(&philo->data->print);
+		sms(philo->data, "is dead", philo->id_philo);
+		pthread_mutex_unlock(&philo->data->print);
 			pthread_mutex_unlock(&philo->lock_dead);
 		}
 		
@@ -47,7 +46,7 @@ int	ft_usleep(uint64_t time)
 	return (0);
 }
 
-void ft_eat(t_philo *philo)
+void ft_eat(t_philo *philo, pthread_t delorian)
 {
 	pthread_mutex_lock(philo->fork_l);
 	pthread_mutex_lock(&philo->data->print);
@@ -57,7 +56,7 @@ void ft_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->data->print);
 	sms(philo->data, "has taken a fork", philo->id_philo);
 	pthread_mutex_unlock(&philo->data->print);
-	//pthread_join(delorian, NULL);
+	pthread_join(delorian, NULL);
 	pthread_mutex_lock(&philo->lock_dead);
 	philo->is_eating = 1;
 	pthread_mutex_unlock(&philo->lock_dead);
@@ -65,12 +64,12 @@ void ft_eat(t_philo *philo)
 	sms(philo->data, "is eating", philo->id_philo);
 	pthread_mutex_unlock(&philo->data->print);
 	ft_usleep(philo->t_eat);
-	philo->time_to_die = get_time() + (uint64_t)philo->data->t_die;
-	//pthread_create(&delorian, NULL, &timer, &philo);
 	pthread_mutex_lock(&philo->lock_dead);
+	philo->time_to_die = get_time() + (uint64_t)philo->data->t_die;
 	philo->meal++;
 	philo->is_eating = 0;
 	pthread_mutex_unlock(&philo->lock_dead);
+	pthread_create(&delorian, NULL, &timer, &philo);
 	pthread_mutex_unlock(philo->fork_l);
 	pthread_mutex_unlock(philo->fork_r);
 	
@@ -94,9 +93,6 @@ int is_it_sated(t_philo *philo)
 			pthread_mutex_lock(&philo->lock_dead);
 			philo->sated = 1;
 			pthread_mutex_unlock(&philo->lock_dead);
-			pthread_mutex_lock(&philo->data->lock);
-			philo->data->sated_condition++;
-			pthread_mutex_unlock(&philo->data->lock);
 			return (1) ;
 		 }
 	else
@@ -112,13 +108,13 @@ void *ft_routine(void *ptr)
 		return (NULL);
 	while (philo->data->end == 0)
 	{
-		//ft_eat(philo, delorian);
-		ft_eat(philo);
+		ft_eat(philo, delorian);
+	//	ft_eat(philo);
 		is_it_sated(philo);
-		if (philo->data->end == 1)
+		if (!(philo->data->end == 0 && philo->dead == 0))
 			break ;
 		ft_sleeping(philo);
-		if (philo->data->end == 1)
+		if (!(philo->data->end == 0 && philo->dead == 0))
 			break ;
 		sms(philo->data, "is thinking", philo->id_philo); 
 		pthread_mutex_unlock(&philo->data->print);

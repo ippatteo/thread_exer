@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
+/*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 17:06:42 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/12 09:29:36 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/13 08:54:22 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void		init(t_data *data, int ac, char **av);
 void 		init_philos(t_data *data);
 void 		init_fork(t_data *data);
 void 		init_threads(t_data *data);
-void		ft_eat(t_philo *philo);
+void		ft_eat(t_philo *philo, pthread_t delorian);
 void 		ft_thinking(t_philo *philo);
 void 		*ft_routine(void *ptr);
 void		alloc(t_data *data);

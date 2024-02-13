@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kevi il re, <capitano delle troie>         +#+  +:+       +#+        */
+/*   By: mcamilli <mcamilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 15:15:28 by mcamilli          #+#    #+#             */
-/*   Updated: 2024/02/12 10:54:48 by kevi il re,      ###   ########.fr       */
+/*   Updated: 2024/02/13 08:56:35 by mcamilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,10 @@ void init_threads(t_data *data)
 	while (i < data->n_philo)
 	{
 		pthread_create(&data->threads[i], NULL, &ft_routine, &data->philo[i]);
+		pthread_detach(data->threads[i]);
 		i++;
-		usleep(1000);//qui ritardi i filosofi
-	}
-	i = 0;
-	while(i < data->n_philo)
-	{
-		pthread_join(data->threads[i], NULL);
-		i++;
+		usleep(1000);
+		//qui ritardi i filosofi
 	}
 	pthread_join(pula, NULL);
 }
